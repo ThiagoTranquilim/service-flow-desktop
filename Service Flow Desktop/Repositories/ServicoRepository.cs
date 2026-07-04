@@ -19,4 +19,9 @@ public class ServicoRepository: IServicoRepository
         _dbContext.Servicos.Add(servico);
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task<List<Servico>> ListagemDeServicosAsync()
+    {
+        return await _dbContext.Servicos.ToListAsync();
+    }
 }

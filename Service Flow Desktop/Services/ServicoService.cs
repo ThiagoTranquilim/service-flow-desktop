@@ -1,5 +1,6 @@
 ﻿
 using Service_Flow_Desktop.Models;
+using Service_Flow_Desktop.Repositories;
 using Service_Flow_Desktop.Repositories.Interfaces;
 
 namespace Service_Flow_Desktop.Services;
@@ -31,5 +32,10 @@ public class ServicoService
         }
         
         await _servicoRepository.AdicionarAsync(servico);
+    }
+
+    public async Task<List<Servico>> ListarServicosAsync()
+    {
+        return await _servicoRepository.ListagemDeServicosAsync();
     }
 }
