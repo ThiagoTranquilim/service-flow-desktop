@@ -24,4 +24,10 @@ public class ClienteRepository : IClienteRepository
     {
         return await _dbContext.Clientes.ToListAsync();
     }
+
+    public async Task AtualizarAsync(Cliente cliente)
+    {
+        _dbContext.Clientes.Update(cliente);
+        await _dbContext.SaveChangesAsync();
+    }
 }

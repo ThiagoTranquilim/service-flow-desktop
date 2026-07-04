@@ -26,4 +26,9 @@ public class ClienteService
     {
         return await _clienteRepository.ListagemDeClientesAsync();
     }
+
+    public async Task AtualizarClienteAsync(Cliente cliente)
+    {
+        await _clienteRepository.AtualizarAsync(cliente);
+    }
 }

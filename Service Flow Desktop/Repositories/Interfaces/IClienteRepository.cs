@@ -7,4 +7,6 @@ public interface IClienteRepository
     Task AdicionarAsync(Cliente cliente);
 
     Task<List<Cliente>> ListagemDeClientesAsync();
+
+    Task AtualizarAsync(Cliente cliente);
 }
