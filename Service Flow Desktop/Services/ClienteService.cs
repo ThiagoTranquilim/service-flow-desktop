@@ -21,4 +21,9 @@ public class ClienteService
 
         await _clienteRepository.AdicionarAsync(cliente);
     }
+
+    public async Task<List<Cliente>> ListarClientesAsync()
+    {
+        return await _clienteRepository.ListagemDeClientesAsync();
+    }
 }
