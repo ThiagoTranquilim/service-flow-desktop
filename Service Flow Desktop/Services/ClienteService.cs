@@ -31,4 +31,9 @@ public class ClienteService
     {
         await _clienteRepository.AtualizarAsync(cliente);
     }
+
+    public async Task RemoverClienteAsync(Cliente cliente)
+    {
+        await _clienteRepository.RemoverAsync(cliente);
+    }
 }

@@ -25,9 +25,20 @@ public class ClienteRepository : IClienteRepository
         return await _dbContext.Clientes.ToListAsync();
     }
 
+    public async Task<Cliente?> ObterClientePorIdAsync(int id)
+    {
+        return await _dbContext.Clientes.FirstOrDefaultAsync(cliente => cliente.Id == id);
+    }
+
     public async Task AtualizarAsync(Cliente cliente)
     {
         _dbContext.Clientes.Update(cliente);
+        await _dbContext.SaveChangesAsync();
+    }
+
+    public async Task RemoverAsync(Cliente cliente)
+    {
+        _dbContext.Clientes.Remove(cliente);
         await _dbContext.SaveChangesAsync();
     }
 }

@@ -8,5 +8,9 @@ public interface IClienteRepository
 
     Task<List<Cliente>> ListagemDeClientesAsync();
 
+    Task<Cliente?> ObterClientePorIdAsync(int id);
+
     Task AtualizarAsync(Cliente cliente);
+
+    Task RemoverAsync(Cliente cliente);
 }
