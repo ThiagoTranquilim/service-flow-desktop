@@ -1,0 +1,22 @@
+﻿using Service_Flow_Desktop.Repositories.Interfaces;
+using Service_Flow_Desktop.Data;
+using Service_Flow_Desktop.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace Service_Flow_Desktop.Repositories;
+
+public class ServicoRepository: IServicoRepository
+{
+    private readonly ServiceFlowDbContext _dbContext;
+
+    public ServicoRepository(ServiceFlowDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task AdicionarAsync(Servico servico)
+    {
+        _dbContext.Servicos.Add(servico);
+        await _dbContext.SaveChangesAsync();
+    }
+}
