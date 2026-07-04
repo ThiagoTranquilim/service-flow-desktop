@@ -7,4 +7,6 @@ public interface IServicoRepository
     Task AdicionarAsync(Servico servico);
 
     Task<List<Servico>> ListagemDeServicosAsync();
+
+    Task AtualizarAsync(Servico servico);
 }

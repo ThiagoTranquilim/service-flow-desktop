@@ -38,4 +38,9 @@ public class ServicoService
     {
         return await _servicoRepository.ListagemDeServicosAsync();
     }
+
+    public async Task AtualizarServicoAsync(Servico servico)
+    {
+        await _servicoRepository.AtualizarAsync(servico);
+    }
 }

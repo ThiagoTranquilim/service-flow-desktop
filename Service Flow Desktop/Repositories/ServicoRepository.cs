@@ -24,4 +24,10 @@ public class ServicoRepository: IServicoRepository
     {
         return await _dbContext.Servicos.ToListAsync();
     }
+
+    public async Task AtualizarAsync(Servico servico)
+    {
+        _dbContext.Servicos.Update(servico);
+        await _dbContext.SaveChangesAsync();
+    }
 }
