@@ -22,5 +22,10 @@ namespace Service_Flow_Desktop
             InitializeComponent();
             DataContext = new MainViewModel();
         }
+
+        private void CloseApp_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

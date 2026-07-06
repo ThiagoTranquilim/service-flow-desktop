@@ -9,6 +9,14 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+	<ItemGroup>
+		<None Remove="Images\*.png" />
+		<Resource Include="Images\*.png" />
+
+		<None Remove="Fonts\*.ttf" />
+		<Resource Include="Fonts\*.ttf" />
+	</ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
