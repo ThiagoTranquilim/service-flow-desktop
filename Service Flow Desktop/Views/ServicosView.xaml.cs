@@ -1,4 +1,5 @@
-﻿using Service_Flow_Desktop.ViewModels;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,22 +11,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Service_Flow_Desktop
+namespace Service_Flow_Desktop.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interação lógica para ServicosView.xam
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ServicosView : UserControl
     {
-        public MainWindow()
+        public ServicosView()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
-        }
-
-        private void CloseApp_Click(object sender, RoutedEventArgs e)
-        {
-            Close();
         }
     }
 }
