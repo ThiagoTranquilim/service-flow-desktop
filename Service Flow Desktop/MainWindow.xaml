@@ -5,8 +5,47 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Service_Flow_Desktop"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="600" Width="850"
+        AllowsTransparency="True"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None"
+        Background="Transparent">
     <Grid>
+        
+        <!-- // Window Border // -->
 
+        <Border Background="#212529"
+                CornerRadius="20"/>
+
+        <Grid>
+
+            <!-- // Base Grid // -->
+
+            <Grid.ColumnDefinitions>
+
+                <ColumnDefinition Width="228"/>
+                <ColumnDefinition Width="622"/>
+            </Grid.ColumnDefinitions>
+
+            <StackPanel Grid.Column="0" Margin="20">
+
+                <Button Content="Clientes"
+                        Command="{Binding ShowClientesCommand}" />
+
+                <Button Content="Serviços"
+                    Command="{Binding ShowServicosCommand}" />
+
+                <Button Content="Ordens"
+                    Command="{Binding ShowOrdensServicoCommand}" />
+
+                <Button Content="Nova Ordem"
+                    Command="{Binding ShowOrdemServicoFormCommand}" />
+
+            </StackPanel>
+
+            <ContentControl Grid.Column="1"
+                            Content="{Binding CurrentViewModel}" />
+
+        </Grid>
     </Grid>
 </Window>

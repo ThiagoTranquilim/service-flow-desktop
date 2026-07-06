@@ -1,4 +1,5 @@
-﻿using Service_Flow_Desktop.ViewModels;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,17 +11,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Service_Flow_Desktop
+namespace Service_Flow_Desktop.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interação lógica para ClientesView.xam
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class ClientesView : UserControl
     {
-        public MainWindow()
+        public ClientesView()
         {
             InitializeComponent();
-            DataContext = new MainViewModel();
         }
     }
 }
