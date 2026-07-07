@@ -4,13 +4,39 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Service_Flow_Desktop.Views"
+             xmlns:components="clr-namespace:Service_Flow_Desktop.Components"
+             xmlns:models="clr-namespace:Service_Flow_Desktop.Models"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <UserControl.Resources>
+
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+
+        <DataTemplate DataType="{x:Type models:Cliente}">
+            <components:ClienteDetailsContent />
+        </DataTemplate>
+    </UserControl.Resources>
+
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="2*" />
+        </Grid.ColumnDefinitions>
 
-        <TextBlock Text="Tela de Clientes"
-           FontSize="32"
-           Foreground="White" />
+        <components:CrudListPanel Grid.Column="0" />
+        <components:CrudDetailsPanel Grid.Column="1" />
 
+        <components:ClienteCreateDialog
+            Grid.ColumnSpan="2"
+            Visibility="{Binding IsCreateDialogOpen, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+        <components:ClienteEditDialog
+            Grid.ColumnSpan="2"
+            Visibility="{Binding IsEditDialogOpen, Converter={StaticResource BoolToVisibilityConverter}}" />
+
+        <components:ClienteDeleteDialog
+            Grid.ColumnSpan="2"
+            Visibility="{Binding IsDeleteDialogOpen, Converter={StaticResource BoolToVisibilityConverter}}" />
     </Grid>
 </UserControl>
