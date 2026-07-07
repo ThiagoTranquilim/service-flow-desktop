@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="Service_Flow_Desktop.Components.ClienteDeleteDialog"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Service_Flow_Desktop.Components"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Border Background="#80000000">
+        <Border
+            Width="340"
+            Padding="20"
+            Background="#272B2F"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center">
+
+            <StackPanel>
+                <TextBlock
+                    Text="Excluir produto"
+                    FontSize="22"
+                    FontWeight="Bold" />
+
+                <TextBlock
+                    Text="{Binding ItemSelecionado.Nome, StringFormat=Tem certeza que deseja excluir {0}?}"
+                    TextWrapping="Wrap" />
+
+                <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                    <Button
+                        Content="Excluir"
+                        Command="{Binding ConfirmarExcluirClienteCommand}" />
+
+                    <Button
+                        Content="Cancelar"
+                        Command="{Binding CancelarExcluirClienteCommand}"
+                        Margin="8,0,0,0" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Border>
+</UserControl>
