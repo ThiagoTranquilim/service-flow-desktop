@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Windows.Input;
 using Microsoft.EntityFrameworkCore;
 using Service_Flow_Desktop.Commands;
 using Service_Flow_Desktop.Data;
@@ -41,8 +42,11 @@ namespace Service_Flow_Desktop.ViewModels
             var clienteRepository = new ClienteRepository(dbContext);
             var clienteService = new ClienteService(clienteRepository);
 
+            var servicoRepository = new ServicoRepository(dbContext);
+            var servicoService = new ServicoService(servicoRepository);
+
             _clientesViewModel = new ClientesViewModel(clienteService);
-            _servicosViewModel = new ServicosViewModel();
+            _servicosViewModel = new ServicosViewModel(servicoService);
             _ordensServicoViewModel = new OrdensServicoViewModel();
             _ordemServicoFormViewModel = new OrdemServicoFormViewModel();
 
