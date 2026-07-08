@@ -1,125 +1,200 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing.Text;
 using System.Text;
 using System.Windows.Input;
 using Service_Flow_Desktop.Commands;
 using Service_Flow_Desktop.Models;
 using Service_Flow_Desktop.Utilities;
+using Service_Flow_Desktop.Services;
+using System.Data;
+using Service_Flow_Desktop.Data;
+using Service_Flow_Desktop.Repositories;
 
 namespace Service_Flow_Desktop.ViewModels
 {
     public class ClientesViewModel : BaseViewModel
     {
+        private readonly ClienteService _clienteService;
+
+        private Cliente? _itemSelecionado;
+        private bool _isCreateDialogOpen;
+        private bool _isEditDialogOpen;
+        private bool _isDeleteDialogOpen;
+
         public ObservableCollection<Cliente> Itens { get; } = new();
-
-        private Cliente? _itemsSelecionado;
-
-        public bool IsAdicionarClienteAberto { get; set; }
 
         public string NovoClienteNome { get; set; } = string.Empty;
         public string NovoClienteTelefone { get; set; } = string.Empty;
         public string NovoClienteEmail { get; set; } = string.Empty;
-        public string ClienteEdicaoNome {  get; set; } = string.Empty;
+
+        public string ClienteEdicaoNome { get; set; } = string.Empty;
         public string ClienteEdicaoTelefone { get; set; } = string.Empty;
         public string ClienteEdicaoEmail { get; set; } = string.Empty;
+
+        public Cliente? ItemSelecionado
+        {
+            get => _itemSelecionado;
+            set
+            {
+                _itemSelecionado = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsCreateDialogOpen
+        {
+            get => _isCreateDialogOpen;
+            set
+            {
+                _isCreateDialogOpen = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsEditDialogOpen
+        {
+            get => _isEditDialogOpen;
+            set
+            {
+                _isEditDialogOpen = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsDeleteDialogOpen
+        {
+            get => _isDeleteDialogOpen;
+            set
+            {
+                _isDeleteDialogOpen = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ICommand NovoCommand { get; }
         public ICommand EditarCommand { get; }
         public ICommand ExcluirCommand { get; }
 
-        // Create
-        public bool IsCreateDialogOpen { get; set; }
-        public ICommand AbrirCreateDialogCommand { get; }
         public ICommand SalvarNovoClienteCommand { get; }
         public ICommand CancelarNovoClienteCommand { get; }
 
-        // Edit
-        public bool IsEditDialogOpen { get; set; }
-        public ICommand AbrirEditDialogCommand { get; }
         public ICommand SalvarEdicaoClienteCommand { get; }
         public ICommand CancelarEdicaoClienteCommand { get; }
 
-        // Delete
-        public bool IsDeleteDialogOpen { get; set; }
-        public ICommand AbrirDeleteDialogCommand { get; }
         public ICommand ConfirmarExcluirClienteCommand { get; }
         public ICommand CancelarExcluirClienteCommand { get; }
 
-        public Cliente? ItemSelecionado
+        public ClientesViewModel(ClienteService clienteService)
         {
-            get => _itemsSelecionado;
-            set
-            {
-                _itemsSelecionado = value;
-                OnPropertyChanged();
-            }
+            _clienteService = clienteService;
+
+            NovoCommand = new RelayCommand(_ => AbrirCriacao());
+            EditarCommand = new RelayCommand(_ => AbrirEdicao(), _ => ItemSelecionado is not null);
+            ExcluirCommand = new RelayCommand(_ => AbrirExclusao(), _ => ItemSelecionado is not null);
+
+            SalvarNovoClienteCommand = new RelayCommand(async _ => await SalvarNovoClienteAsync());
+            CancelarNovoClienteCommand = new RelayCommand(_ => IsCreateDialogOpen = false);
+
+            SalvarEdicaoClienteCommand = new RelayCommand(async _ => await SalvarEdicaoClienteAsync());
+            CancelarEdicaoClienteCommand = new RelayCommand(_ => IsEditDialogOpen = false);
+
+            ConfirmarExcluirClienteCommand = new RelayCommand(async _ => await ExcluirClienteAsync());
+            CancelarExcluirClienteCommand = new RelayCommand(_ => IsDeleteDialogOpen = false);
+
+            _ = CarregarClientesAsync();
         }
 
-        public ClientesViewModel()
+        private void AbrirCriacao()
         {
-            NovoCommand = new RelayCommand(_ => 
+            NovoClienteNome = string.Empty;
+            NovoClienteTelefone = string.Empty;
+            NovoClienteEmail = string.Empty;
+
+            OnPropertyChanged(nameof(NovoClienteNome));
+            OnPropertyChanged(nameof(NovoClienteTelefone));
+            OnPropertyChanged(nameof(NovoClienteEmail));
+
+            IsCreateDialogOpen = true;
+        }
+
+        private void AbrirEdicao()
+        {
+            if (ItemSelecionado is null)
+                return;
+
+            ClienteEdicaoNome = ItemSelecionado.Nome;
+            ClienteEdicaoTelefone = ItemSelecionado.Telefone;
+            ClienteEdicaoEmail = ItemSelecionado.Email;
+
+            OnPropertyChanged(nameof(ClienteEdicaoNome));
+            OnPropertyChanged(nameof(ClienteEdicaoTelefone));
+            OnPropertyChanged(nameof(ClienteEdicaoEmail));
+
+            IsEditDialogOpen = true;
+        }
+
+        private void AbrirExclusao()
+        {
+            if (ItemSelecionado is null)
+                return;
+
+            IsDeleteDialogOpen = true;
+        }
+
+        private async Task SalvarNovoClienteAsync()
+        {
+            var cliente = new Cliente
             {
-                NovoClienteNome = string.Empty;
-                NovoClienteTelefone = string.Empty;
-                NovoClienteEmail = string.Empty;
+                Nome = NovoClienteNome,
+                Telefone = NovoClienteTelefone,
+                Email = NovoClienteEmail
+            };
 
-                IsCreateDialogOpen = true;
+            await _clienteService.CadastrarClienteAsync(cliente);
 
-                OnPropertyChanged(nameof(NovoClienteNome));
-                OnPropertyChanged(nameof(NovoClienteTelefone));
-                OnPropertyChanged(nameof(NovoClienteEmail));
-                OnPropertyChanged(nameof(IsCreateDialogOpen));
-            });
+            Itens.Add(cliente);
+            IsCreateDialogOpen = false;
+        }
 
-            EditarCommand = new RelayCommand(_ =>
-            {
-                if (ItemSelecionado is null)
-                    return;
+        private async Task SalvarEdicaoClienteAsync()
+        {
+            if (ItemSelecionado is null)
+                return;
 
-                ClienteEdicaoNome = ItemSelecionado.Nome;
-                ClienteEdicaoTelefone = ItemSelecionado.Telefone;
-                ClienteEdicaoEmail = ItemSelecionado.Email;
+            ItemSelecionado.Nome = ClienteEdicaoNome;
+            ItemSelecionado.Telefone = ClienteEdicaoTelefone;
+            ItemSelecionado.Email = ClienteEdicaoEmail;
 
-                IsEditDialogOpen = true;
+            await _clienteService.AtualizarClienteAsync(ItemSelecionado);
 
-                OnPropertyChanged(nameof(ClienteEdicaoNome));
-                OnPropertyChanged(nameof(ClienteEdicaoTelefone));
-                OnPropertyChanged(nameof(ClienteEdicaoEmail));
-                OnPropertyChanged(nameof(IsEditDialogOpen));
-            });
+            OnPropertyChanged(nameof(ItemSelecionado));
+            IsEditDialogOpen = false;
+        }
 
-            ExcluirCommand = new RelayCommand(_ =>
-            {
-                if (ItemSelecionado is null)
-                    return;
+        private async Task ExcluirClienteAsync()
+        {
+            if (ItemSelecionado is null)
+                return;
 
-                IsDeleteDialogOpen = true;
-                OnPropertyChanged(nameof(IsDeleteDialogOpen));
-            });
+            var cliente = ItemSelecionado;
 
-            SalvarNovoClienteCommand = new RelayCommand(_ => { });
+            await _clienteService.RemoverClienteAsync(cliente);
 
-            CancelarNovoClienteCommand = new RelayCommand(_ =>
-            {
-                IsCreateDialogOpen = false;
-                OnPropertyChanged(nameof(IsCreateDialogOpen));
-            });
+            Itens.Remove(cliente);
+            ItemSelecionado = null;
+            IsDeleteDialogOpen = false;
+        }
 
-            CancelarEdicaoClienteCommand = new RelayCommand(_ =>
-            {
-                IsEditDialogOpen = false;
-                OnPropertyChanged(nameof(IsEditDialogOpen));
-            });
+        private async Task CarregarClientesAsync()
+        {
+            Itens.Clear();
 
-            CancelarExcluirClienteCommand = new RelayCommand(_ =>
-            {
-                IsDeleteDialogOpen = false;
-                OnPropertyChanged(nameof(IsDeleteDialogOpen));
-            });
+            var clientes = await _clienteService.ListarClientesAsync();
 
-            Itens.Add(new Cliente { Id = 1, Nome = "Thiago", Telefone = "(19)9999-9999", Email = "email@gmail.com"});
-            Itens.Add(new Cliente { Id = 2, Nome = "Thiago 2", Telefone = "(19)1234-5678", Email = "email2@gmail.com"});
+            foreach (var cliente in clientes)
+                Itens.Add(cliente);
         }
     }
 }

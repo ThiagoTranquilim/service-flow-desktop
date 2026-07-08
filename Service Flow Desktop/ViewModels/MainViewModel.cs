@@ -1,5 +1,9 @@
 ﻿using System.Windows.Input;
+using Microsoft.EntityFrameworkCore;
 using Service_Flow_Desktop.Commands;
+using Service_Flow_Desktop.Data;
+using Service_Flow_Desktop.Repositories;
+using Service_Flow_Desktop.Services;
 using Service_Flow_Desktop.Utilities;
 
 namespace Service_Flow_Desktop.ViewModels
@@ -30,7 +34,14 @@ namespace Service_Flow_Desktop.ViewModels
 
         public MainViewModel()
         {
-            _clientesViewModel = new ClientesViewModel();
+            var dbContext = new ServiceFlowDbContext();
+
+            dbContext.Database.Migrate();
+
+            var clienteRepository = new ClienteRepository(dbContext);
+            var clienteService = new ClienteService(clienteRepository);
+
+            _clientesViewModel = new ClientesViewModel(clienteService);
             _servicosViewModel = new ServicosViewModel();
             _ordensServicoViewModel = new OrdensServicoViewModel();
             _ordemServicoFormViewModel = new OrdemServicoFormViewModel();
