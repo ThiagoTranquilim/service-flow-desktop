@@ -30,4 +30,10 @@ public class ServicoRepository: IServicoRepository
         _dbContext.Servicos.Update(servico);
         await _dbContext.SaveChangesAsync();
     }
+
+    public async Task RemoverAsync(Servico servico)
+    {
+        _dbContext.Servicos.Remove(servico);
+        await _dbContext.SaveChangesAsync();
+    }
 }

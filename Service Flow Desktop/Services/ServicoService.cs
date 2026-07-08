@@ -43,4 +43,9 @@ public class ServicoService
     {
         await _servicoRepository.AtualizarAsync(servico);
     }
+
+    public async Task RemoverServicoAsync(Servico servico)
+    {
+        await _servicoRepository.RemoverAsync(servico);
+    }
 }

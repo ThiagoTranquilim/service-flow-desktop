@@ -9,4 +9,6 @@ public interface IServicoRepository
     Task<List<Servico>> ListagemDeServicosAsync();
 
     Task AtualizarAsync(Servico servico);
+
+    Task RemoverAsync(Servico servico);
 }
